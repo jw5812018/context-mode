@@ -825,7 +825,7 @@ describe("v1.0.148 Bug G — strict-compression formula (Section 1 Without/With)
     // Locate the "kept out of context" ratio line.
     const ratioLine = lines.find((l) => /kept out of context/.test(l));
     expect(ratioLine, `ratio line missing:\n${text}`).toBeDefined();
-    const m = ratioLine!.match(/(\d+)%\s+kept out of context/);
+    const m = ratioLine!.match(/(\d+(?:\.\d+)?)%\s+kept out of context/);
     expect(m, `cannot parse ratio: ${ratioLine}`).not.toBeNull();
     const pct = Number(m![1]);
 
