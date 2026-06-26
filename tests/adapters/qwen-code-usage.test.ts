@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { createHash } from "node:crypto";
+import { join } from "node:path";
 import { parseQwenUsage, extractQwenUsageSince, qwenProjectHash, qwenChatJsonlPath } from "../../src/adapters/qwen-code/usage.js";
 import { buildAgentUsageEvent } from "../../src/session/extract.js";
 
@@ -207,8 +208,11 @@ describe("qwenChatJsonlPath", () => {
     const root = "/work/proj";
     const sid = "sess-abc";
     const hash = qwenProjectHash(root);
+    // Build the expected with join() so the assertion is separator-agnostic:
+    // qwenChatJsonlPath uses path.join (OS-native), so on win32 the real path
+    // uses backslashes — a hard-coded forward-slash literal fails there.
     expect(qwenChatJsonlPath(home, root, sid)).toBe(
-      `/home/u/.qwen/tmp/${hash}/chats/${sid}.jsonl`,
+      join(home, "tmp", hash, "chats", `${sid}.jsonl`),
     );
   });
 });
